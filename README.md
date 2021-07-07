@@ -1,11 +1,11 @@
 # Personal Dotfiles
 Here is a collection of my dotfiles that tries to integrate the Nord-theme as much as possible. At the moment only the [Waybar](https://github.com/Alexays/Waybar) configuration is publicly released, hopefully the rest will follow as well.
 
-###Screenshots
+### Screenshots
 
 **Waybar**
 
-[Screenshot of waybar]:[/screenshot.png?raw=true]
+![Screenshot of waybar](/screenshot.png?raw=true)
 
 ## Waybar config
 >Highly customizable Wayland bar for Sway and Wlroots based compositors.
@@ -14,15 +14,15 @@ Available in Arch community or AUR, openSUSE, and Alpine Linux
 I've configured waybar with the Nord-theme in mind as well as trying to take vital information and make it as easy as possible to take in. There is also a script for the custom-module part which simply shows the current cpugovernor (only supports Performance or Schedutil at the moment).
 Screenshot follows after list of items in the bar left to right.
 
-###Left
+### Left
 * Clock and date, with **gnome-calendar** open on left-click 
 * Input language indicator
 * Scratchpad widget, **cycles** contents or **sends** to scratch
 * Pacman available updates indicator
 * Idle-inhibitor
-###Middle
+### Middle
 * Workspaces, minimalistic. Configure icons in config
-####Right
+#### Right
 * CPU Governor indicator, script in **custom_modules** can be extended
 * CPU max frequency and usage in percent
 * CPU temperature with warning. Opens **htop** in term on click
