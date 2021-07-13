@@ -1,12 +1,13 @@
 {
     "layer": "top", // Waybar at top layer
     "position": "top", // Waybar position (top|bottom|left|right)
-    "height": 36, // Waybar height (to be removed for auto height)
-    // "custom/gpu", "bluetooth",  "custom/weather", "temperature",
+    // "height": 36, // Waybar height (to be removed for auto height)
+    // Archived modules
+    // "custom/gpu", "bluetooth",  "custom/weather", "temperature", "sway/window"
     // Choose the order of the modules
-    "modules-left": ["sway/workspaces", "sway/mode", "idle_inhibitor", "custom/media"],
-    "modules-center": ["sway/window"],
-    "modules-right": [ "clock","sway/language", "custom/scratchpad-indicator", "custom/pacman", "custom/cpugovernor", "cpu", "temperature", "pulseaudio", "bluetooth", "network", "tray"],
+    "modules-left": [ "clock", "sway/language", "custom/scratchpad-indicator", "custom/pacman", "sway/mode", "idle_inhibitor", "custom/media"],
+    "modules-center": ["sway/workspaces"],
+    "modules-right": [ "custom/cpugovernor", "cpu", "temperature", "custom/gpu", "pulseaudio", "bluetooth", "network", "tray"],
     // Modules configuration
     "sway/workspaces": {
         "disable-scroll": true,
@@ -14,7 +15,7 @@
         "format": "{icon}",
         "format-icons": {
             "1": "<span color=\"#D8DEE9\"></span>",
-            "2": "<span color=\"#88C0D0\"></span>",
+            "2": "<span color=\"#88C0D0\"></span>",
             "3": "<span color=\"#A3BE8C\"></span>",
             "4": "<span color=\"#D8DEE9\"></span>",
             "urgent": "",
@@ -65,9 +66,9 @@
     },
     "cpu": {
         "interval": "1",      
-        "format": "  {max_frequency}GHz <span color=\"grey\">| {usage}%</span>",
-        "max-length": 14,
-        "min-length": 14,
+        "format": "  {max_frequency}GHz <span color=\"darkgray\">| {usage}%</span>",
+        "max-length": 13,
+        "min-length": 13,
         "on-click": "kitty -e htop --sort-key PERCENT_CPU",
         "tooltip": false
     },
@@ -130,11 +131,15 @@
         "interval": 3600
     },
     "custom/gpu": {
-      "exec": "cat /sys/class/hwmon/hwmon5/device/gpu_busy_percent",
-      "format": "  {}%",
-      "return-type": "",
-      "interval": 1,
+      "exec": "$HOME/.config/waybar/custom_modules/custom-gpu.sh",
+      "return-type": "json",
+      "format": "  {}",
+      "interval": 2,
+      "tooltip": "{tooltip}",
+      "max-length": 19,
+      "min-length": 19,
       "on-click": "powerupp"
+      
     }, 
     "custom/cpugovernor": {
       "format": "{icon}",

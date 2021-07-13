@@ -32,12 +32,12 @@
 @define-color bg #2E3440;
 /*@define-color bg #353C4A;*/
 @define-color light #D8DEE9;
-@define-color dark #3B4252;
+/*@define-color dark @nord_dark_font;*/
 @define-color warning #ebcb8b;
 @define-color critical #BF616A;
 @define-color mode #434C5E;
 /*@define-color workspaces @bg;*/
-@define-color workspaces #3B4252;
+/*@define-color workspaces @nord_dark_font;*/
 /*@define-color workspacesfocused #434C5E;*/
 @define-color workspacesfocused #4C566A;
 @define-color tray @workspacesfocused;
@@ -52,9 +52,10 @@
 @define-color time #434C5E;
 @define-color backlight #434C5E;
 @define-color nord_bg #434C5E;
-
-/* Use this for boxes */
-/* #434C5E */
+@define-color nord_bg_blue #546484;
+@define-color nord_light #D8DEE9;
+@define-color nord_light_font #D8DEE9;
+@define-color nord_dark_font #434C5E;
 
 /* Reset all styles */
 * {
@@ -69,8 +70,7 @@
     background: @bg;
     color: @light;
     font-family: "Cantarell", "Font Awesome 5 Pro";
-    /*font-size: 0.8em;*/
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
 }
 
@@ -129,7 +129,8 @@
 #cpu.warning,
 #temperature.warning,
 #battery.warning {
-    color: @warning;
+    background: @warning;
+    color: @nord_dark_font;
 }
 
 /* Each warning that should blink */
@@ -154,17 +155,18 @@
 
 #workspaces button {
     font-weight: bold; /* Somewhy the bar-wide setting is ignored*/
-    padding-left: 6px;
-    padding-right: 6px;
+    padding: 0;
     /*color: #999;*/
-    opacity: 0.6;
-    background: @workspaces;
+    opacity: 0.3;
+    background: none;
+    font-size: 1em;
 }
 
 #workspaces button.focused {
     background: @workspacesfocused;
     color: #D8DEE9;
     opacity: 1;
+    padding: 0 0.4em;
 }
 
 #workspaces button.urgent {
@@ -179,13 +181,13 @@
     font-weight: normal;
 }
 #bluetooth {
-    background: #5E81AC;
+    background: @nord_bg_blue;
     font-size: 1.2em;
     font-weight: bold;
     padding: 0 0.6em;
 }
 #custom-gpu {
-    background: @mode;
+    background: @nord_bg;
     font-weight: bold;
     padding: 0 0.6em;
 }
@@ -195,14 +197,14 @@
     padding: 0 0.6em;
 }
 #custom-pacman {
-    background: #D8DEE9;
-    color: #3B4252;
+    background: @nord_light;
+    color: @nord_dark_font;
     font-weight: bold;
     padding: 0 0.6em;
 }
 #custom-scratchpad-indicator {
-    background: #D8DEE9;
-    color: #3B4252;
+    background: @nord_light;
+    color: @nord_dark_font;
     font-weight: bold;
     padding: 0 0.6em;
 }
@@ -217,8 +219,7 @@
 }
 
 #network {
-    background: #5E81AC;
-    /*color: #3B4252;*/
+    background: @nord_bg_blue;
 }
 
 #memory {
@@ -226,28 +227,27 @@
 }
 
 #cpu {
-    background: #EBCB8B;
-    color: #3B4252;
+    background: @nord_bg;
+    color: #D8DEE9;
 }
 #cpu.critical {
-    background: #EBCB8B;
-    color: #3B4252;
+    color: @nord_dark_font;
 }
 #language {
-    background: #546484;
+    background: @nord_bg_blue;
     color: #D8DEE9;
     padding: 0 0.4em;
 }
 #custom-cpugovernor {
-    background-color: #4C566A;
-    color: #D8DEE9;
+    background-color: @nord_light;
+    color: @nord_dark_font;
 }
 #custom-cpugovernor.perf {
     
 }
 #temperature {
-    background-color: #EBCB8B;
-    color: #3B4252;
+    background-color: @nord_bg;
+    color: #D8DEE9;
 }
 #temperature.critical {
     background:  @critical;
@@ -265,10 +265,8 @@
 }
 
 #clock {
-    /*background: @mode;*/
-    background: #88C0D0;
-    color: #434C5E;
-    padding: 0 0.8em;
+    background: @nord_bg_blue;
+    color: #D8DEE9;
 }
 #clock.date {
     background: @date;
@@ -279,18 +277,17 @@
 }
 
 #pulseaudio { /* Unsused but kept for those who needs it */
-    background: #A3BE8C;
-    color: #3B4252;
-    padding: 0 0.4em;
+    background: @nord_bg_blue;
+    color: #D8DEE9;
 }
 
 #pulseaudio.muted {
     background: #BF616A;
-    color: #D8DEE9;
+    color: #BF616A;
     /* No styles */
 }
 #pulseaudio.source-muted {
-    background: #BF616A;
+    background: #D08770;
     color: #D8DEE9;
     /* No styles */
 }
