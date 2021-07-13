@@ -1,5 +1,5 @@
 # Personal Dotfiles
-Here is a collection of my dotfiles that tries to integrate the Nord-theme as much as possible. At the moment only the [Waybar](https://github.com/Alexays/Waybar) configuration is publicly released, hopefully the rest will follow as well.
+Here is a collection of my dotfiles that tries to integrate the Nord-theme as much as possible. At the moment only the [Waybar](https://github.com/Alexays/Waybar) configuration is publicly released, hopefully the rest will follow as well. EDIT: I also uploaded configuration files for, and, related to sway but they rely on a specific set of appliations. Feel free to use what you like.
 
 ### Screenshots
 

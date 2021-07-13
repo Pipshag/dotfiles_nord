@@ -1,0 +1,328 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+# Your preferred terminal emulator
+#set $term alacritty
+
+
+#####################
+### PIPSHAG EDITS ###
+#####################
+
+input "3141:30264:AKKO_AKKO_3084BT" {
+    xkb_layout us,se
+    xkb_options caps:escape,grp:alt_caps_toggle
+    xkb_numlock enable
+    repeat_delay 200
+    repeat_rate 65
+}
+
+# Set pointer scroll factor
+input "type:pointer" {
+  scroll_factor 3
+}
+
+# Set Displays
+set $bg ~/Pictures/background_sway.png
+set $bg_animated ~/Videos/space.mp4
+set $lock_bg ~/Pictures/BgCorrupted.png
+set $lock_opts '--effect-pixelate 10 --indicator --ring-color 4C566A --key-hl-color 4C566A --line-color 2E3440 --separator-color 5E81AC'
+
+# Refresh and VRR
+output DP-1 {
+    scale 1
+    pos 0 0
+    res 2560x1440@144.000Hz
+    adaptive_sync on
+    subpixel none
+}
+
+## Background
+# Static
+output * bg $bg fill
+
+# Animated BG manager
+#exec mpvpaper -o "no-audio" DP-1 $bg_animated
+#swaybg_command -
+
+# Terminal
+set $term kitty
+
+# App Launcher
+set $menu ulauncher
+
+# Add alt tab
+bindsym $mod+tab workspace back_and_forth 
+
+# Add screenshot capability
+    # Region-select-screenshot to file
+    bindsym ctrl+shift+Print exec grimshot --notify save area
+    # Region-select-screenshot to file
+    bindsym shift+Print exec grimshot --notify copy area
+    # Region-select-video to file
+    bindsym alt+shift+Print exec wf-recorder -g "$(slurp)"
+
+# Add section for handling locking and sleeping
+bindsym Alt+l exec 'swaylock -i $lock_bg'
+
+exec swayidle -w \
+        timeout 300 'swaymsg "output * dpms off"' \
+        resume 'swaymsg "output * dpms on"' \
+        timeout 600 'systemctl suspend' \
+        before-sleep 'swaylock -f -i $lock_bg'
+
+# Handle waybar
+bar {
+     swaybar_command waybar
+}
+
+# Quality of life
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+# Font, borders, and gaps   
+    font pango:Cantarell 10
+    gaps inner 4
+    gaps outer -4
+    gaps top -2
+    gaps bottom 0
+    default_border pixel 2
+    default_floating_border pixel 2
+
+# Colours
+    client.background n/a #434c5e n/a
+    client.focused #4C566A #434c5e #eceff4 #434c5e #434c5e
+    client.focused_inactive #3b4252 #3b4252 #eceff4 #3b4252 #3b4252
+    client.unfocused #3b4252 #3b4252 #eceff4 #3b4252 #3b4252
+    client.urgent #4C566A #434c5e #eceff4 #434c5e #434c5e
+
+# Hotkeys
+    ## Special keys
+    # Replacing multimedia for overlay
+    bindsym --locked {
+        ## Volume Control
+        # Support for wob
+        XF86AudioRaiseVolume exec pamixer -ui 5 && pamixer --get-volume > /tmp/wobpipe
+        XF86AudioLowerVolume exec pamixer -ud 5 && pamixer --get-volume > /tmp/wobpipe
+        XF86AudioMute exec pamixer --toggle-mute && ( pamixer --get-mute && echo 0 > /tmp/wobpipe ) || pamixer --get-volume > /tmp/wobpipe
+
+        ## Volume Control
+        # No OSD
+        #XF86AudioRaiseVolume exec sh -c "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 +5%"
+        #XF86AudioLowerVolume exec sh -c "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 -5%"
+        #$mod+F12 exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+    }
+
+    ## Dismiss notifications
+    bindsym $mod+n exec "makoctl dismiss"
+    bindsym $mod+Shift+n exec "makoctl dismiss -a"
+
+    ## Easier kill switch
+    bindsym $mod+q kill
+
+    ## Toggle floating
+    bindsym $mod+Shift+space floating toggle
+
+    ## Add floating windows and inhibit idle
+    # Get app_id or class with
+    # swaymsg -t get_tree | grep
+    for_window [app_id="gnome-calculator"] floating enable
+    for_window [app_id="org.gnome.Nautilus"] floating enable
+    for_window [app_id="org.keepassxc.KeePassXC"] floating enable
+    for_window [class="KeePassXC"] floating enable
+    for_window [class="GitKraken"] floating enable
+    for_window [app_id="gnome-calendar"] floating enable
+    for_window [app_id="gnome-control-center"] floating enable
+    for_window [app_id="blueberry.py"] floating enable
+    for_window [app_id="ulauncher"] floating enable, border none
+    for_window [app_id="mpv"] floating enable, inhibit_idle visible
+    for_window [class="Steam"] floating enable
+    for_window [class="steam_app*"] inhibit_idle focus  
+
+    ## Assign Workspace opens
+    assign [class="jetbrains-idea"] → workspace 2
+    assign [class="jetbrains-datagrip"] → workspace 2
+
+    ## Add opacity to unmanaged applications
+    for_window [app_id="subl"] opacity 0.9
+
+    # Autostart applications per workspace
+    exec swaymsg "workspace 3; exec spotify;"
+    exec swaymsg "workspace 1; exec google-chrome-stable;"
+    exec swaymsg "workspace 1; exec subl;"
+    exec swaymsg "workspace 1; exec kitty;"
+    exec swaymsg "workspace 1; exec keepassxc;"
+
+## Run software
+exec wl-paste -t text --watch clipman store
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec_always rm /tmp/wobpipe && mkfifo /tmp/wobpipe && tail -f /tmp/wobpipe | wob --bar-color=#FFA3BE8C --background-color=#FF3B4252 --border-color=#FF8FBCBB --anchor=bottom --width=600 --height=50 --border=5 --offset=0 --padding=5 --margin=60
+exec udiskie
+exec autotiling
+exec_always mako
+exec_always nm-applet --indicator
+exec openrgb --startminimized --profile default
+exec kdeconnect-indicator
+
+#####################
+#####################
+#####################
+
+### Key bindings
+#
+# Basics:
+#
+    # Start a terminal
+    bindsym $mod+Return exec $term
+
+    # Kill focused window
+    #bindsym $mod+Shift+q kill
+
+    # Start your launcher
+    bindsym $mod+d exec $menu
+    bindsym Control+space exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    # Exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+#
+# Moving around:
+#
+    # Move your focus around
+    #bindsym $mod+$left focus left
+    #bindsym $mod+$down focus down
+    #bindsym $mod+$up focus up
+    #bindsym $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    #bindsym $mod+Shift+$left move left
+    #bindsym $mod+Shift+$down move down
+    #bindsym $mod+Shift+$up move up
+    #bindsym $mod+Shift+$right move right
+    # Ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+
+# Workspaces:
+#
+    # Switch to workspace
+    bindsym $mod+1 workspace number 1
+    bindsym $mod+2 workspace number 2
+    bindsym $mod+3 workspace number 3
+    bindsym $mod+4 workspace number 4
+    bindsym $mod+5 workspace number 5
+    bindsym $mod+6 workspace number 6
+    bindsym $mod+7 workspace number 7
+    bindsym $mod+8 workspace number 8
+    bindsym $mod+9 workspace number 9
+    bindsym $mod+0 workspace number 10
+    # Move focused container to workspace
+    bindsym $mod+Shift+1 move container to workspace number 1
+    bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
+    bindsym $mod+Shift+6 move container to workspace number 6
+    bindsym $mod+Shift+7 move container to workspace number 7
+    bindsym $mod+Shift+8 move container to workspace number 8
+    bindsym $mod+Shift+9 move container to workspace number 9
+    bindsym $mod+Shift+0 move container to workspace number 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+space focus mode_toggle
+
+    # Move focus to the parent container
+    bindsym $mod+a focus parent
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindsym $mod+minus scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r rmode "resize"
+
+include /etc/sway/config.d/*
